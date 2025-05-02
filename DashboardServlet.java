@@ -1,16 +1,26 @@
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 @WebServlet("/DashboardServlet")
 public class DashboardServlet extends HttpServlet {
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // TODO: Implement dashboard logic
-        // 1. Check if user is logged in (session)
-        // 2. Create a list of courses (hardcoded)
-        // 3. Store courses in request attribute
-        // 4. Forward to dashboard.jsp
+
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("username") == null) {
+            response.sendRedirect("login.html");
+            return;
+        }
+
+        // Hardcoded course list
+        List<String> courses = Arrays.asList("CS101", "MATH123", "PHYS201", "ENG150");
+        request.setAttribute("courseList", courses);
+
+        // Forward to dashboard.jsp
+        request.getRequestDispatcher("dashboard.jsp").forward(request, response);
     }
 }
