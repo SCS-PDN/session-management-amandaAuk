@@ -16,11 +16,9 @@ public class DashboardServlet extends HttpServlet {
             return;
         }
 
-        // Hardcoded course list
         List<String> courses = Arrays.asList("CS101", "MATH123", "PHYS201", "ENG150");
         request.setAttribute("courseList", courses);
 
-        // Forward to dashboard.jsp
         request.getRequestDispatcher("dashboard.jsp").forward(request, response);
     }
 }
