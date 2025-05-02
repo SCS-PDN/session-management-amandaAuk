@@ -1,39 +1,38 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="java.util.List" %>
+<%@ page session="true" %>
+<%
+    String username = (String) session.getAttribute("username");
+    List<String> enrolled = (List<String>) session.getAttribute("enrolledCourses");
+    List<String> courseList = (List<String>) request.getAttribute("courseList");
+%>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Course Dashboard</title>
+    <title>Dashboard</title>
 </head>
 <body>
-    <h1>Welcome, ${username}!</h1>
+    <h2>Welcome, <%= username %></h2>
     <a href="LogoutServlet">Logout</a>
-    
-    <h2>Available Courses</h2>
-    <table border="1">
-        <tr>
-            <th>Course ID</th>
-            <th>Course Name</th>
-            <th>Instructor</th>
-            <th>Action</th>
-        </tr>
-        <%-- Will be populated by DashboardServlet --%>
-        <c:forEach items="${courses}" var="course">
-            <tr>
-                <td>${course.id}</td>
-                <td>${course.name}</td>
-                <td>${course.instructor}</td>
-                <td><a href="EnrollServlet?courseId=${course.id}">Enroll</a></td>
-            </tr>
-        </c:forEach>
-    </table>
 
-    <h2>Your Enrolled Courses</h2>
+    <h3>Available Courses</h3>
     <ul>
-        <%-- Will display enrolled courses from session --%>
-        <c:forEach items="${enrolledCourses}" var="course">
-            <li>${course.name} (${course.id})</li>
-        </c:forEach>
+        <% for (String course : courseList) { %>
+            <li>
+                <%= course %> 
+                <% if (!enrolled.contains(course)) { %>
+                    - <a href="EnrollServlet?courseId=<%= course %>">Enroll</a>
+                <% } else { %>
+                    (Enrolled)
+                <% } %>
+            </li>
+        <% } %>
+    </ul>
+
+    <h3>Your Enrolled Courses</h3>
+    <ul>
+        <% for (String course : enrolled) { %>
+            <li><%= course %></li>
+        <% } %>
     </ul>
 </body>
 </html>
